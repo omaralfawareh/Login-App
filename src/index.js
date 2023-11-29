@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Login from './Components/login.js'
-import Signup from './Components/signup.js'
+import Login from './Components/Login.js'
+import Signup from './Components/Signup.js'
 import {
   createBrowserRouter,
   RouterProvider,
