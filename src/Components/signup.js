@@ -4,8 +4,9 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Input , Col,Row, Flex } from 'antd';
 import './style.css'
 import { useState } from 'react';
-import { ColorFactory } from 'antd/es/color-picker/color';
-
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithCredential } from 'firebase/auth';
 export const Signup = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -23,12 +24,13 @@ export const Signup = () => {
         if(email === null || email === undefined || password === undefined || password2 === undefined){
             alert("Invalid Input");
         }else{
-            ValidateEmail(email)
-            ValidatePassword(password)
+            if(ValidateEmail(email) && ValidatePassword(password)){
+                signUp()
+            }
         }
         
     }
-    const ValidateEmail = (e) => {
+    const ValidateEmail =  (e) => {
         
         var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (email.match(validRegex)) {
@@ -39,7 +41,7 @@ export const Signup = () => {
             return false;
         }
     }
-    const ValidatePassword = (e) => {
+    const ValidatePassword =  (e) => {
         //Minimum eight characters, at least one letter, one number and one special character
         var validRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
         if(password.match(validRegex) && password === password2){
@@ -50,6 +52,14 @@ export const Signup = () => {
             return false;
         }
     }
+    const signUp = async () => {
+        try{
+            await createUserWithEmailAndPassword(auth,email, password)
+        }catch (error){
+            console.log(error)
+        }
+    }
+    // const { signup } = useAuth()
   return (
     <div className='container'>
         <div>

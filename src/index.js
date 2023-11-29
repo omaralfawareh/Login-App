@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Login from './Components/Login.js'
 import Signup from './Components/Signup.js'
+import './firebase.js'
 import {
   createBrowserRouter,
   RouterProvider,
