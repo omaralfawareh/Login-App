@@ -1,13 +1,11 @@
 import React from 'react'
-import {Link} from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Input , Col,Row, Flex } from 'antd';
 import {email} from "../App.js";
 import { useState } from 'react';
-import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
 import './style.css'
 import { auth } from "../firebase";
-
 
 
 export const Login = () => {
@@ -40,8 +38,8 @@ export const Login = () => {
     }
     const logIn = async () => {
         try{
-            const user = await signInWithEmailAndPassword(email, password)
-            alert(user.email)
+            const user =  signInWithEmailAndPassword(email, password)
+            alert(auth.currentUser.email)
         }catch (error){
             alert(error.message)
         }
@@ -59,7 +57,7 @@ export const Login = () => {
                     <Input placeholder="Email" htmlType='email' value={email} onChange={HandleChange}/>
                 </Row>
                 <Row className='row'>
-                    <Input.Password
+                    <Input.Password 
                     placeholder="Password"
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined onChange={HandlePassword}/>)}
                 />
@@ -79,9 +77,6 @@ export const Login = () => {
                         </div>
                 </Row>
                 <hr/> 
-                <h2>
-                    
-                </h2>
             </form>
         </div>
     </div>

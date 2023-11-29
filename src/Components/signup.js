@@ -6,7 +6,6 @@ import './style.css'
 import { useState } from 'react';
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { signInWithCredential } from 'firebase/auth';
 export const Signup = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
