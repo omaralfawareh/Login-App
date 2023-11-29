@@ -3,18 +3,26 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Button, Input , Col,Row, Flex } from 'antd';
 import {email} from "../App.js";
 import { useState } from 'react';
-import { signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut ,onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
 import './style.css'
 import { auth } from "../firebase";
+import {   } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
 
 
 export const Login = () => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
-    // const [user, setUser] = useState()
-    // onAuthStateChanged(auth, (currentUser) => {
-    //     setUser(currentUser)
-    // })
+   
+    const handleLogout = () => {               
+        signOut(auth).then(() => {
+            // navigate("/");
+            alert("Signed out successfully")
+        }).catch((error) => {
+            alert("Error signing out")
+        });
+    }
+
     const HandleChange = (e) => {
         setEmail(e.target.value);
     }
@@ -28,7 +36,7 @@ export const Login = () => {
         }
         var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (email.match(validRegex)) {
-            alert("Valid email address!");
+            // alert("Valid email address!");
             logIn();
             return true;
         } else {
@@ -38,7 +46,7 @@ export const Login = () => {
     }
     const logIn = async () => {
         try{
-            const user =  signInWithEmailAndPassword(email, password)
+            const user = await signInWithEmailAndPassword(auth, email, password)
             alert(auth.currentUser.email)
         }catch (error){
             alert(error.message)
@@ -59,7 +67,7 @@ export const Login = () => {
                 <Row className='row'>
                     <Input.Password 
                     placeholder="Password"
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined onChange={HandlePassword}/>)}
+                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={HandlePassword}
                 />
                 </Row>
                 <Row className='row flex'>
@@ -68,7 +76,10 @@ export const Login = () => {
                     </div>
                 </Row>
                 <Row className='row'>
-                    <Button className='button' htmlType='submit' onClick={ValidateEmail}> Login</Button>
+                    <Button className='button'  onClick={ValidateEmail}> Login</Button>
+                </Row>
+                <Row className='row'>
+                    <Button className='button' onClick={handleLogout}> SignOut</Button>
                 </Row>
                 <Row className='row flex'>
                         <div>Dont have an account?</div>
