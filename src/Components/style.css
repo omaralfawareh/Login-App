@@ -37,3 +37,10 @@ h1,div a{
     justify-content: center;
     align-items: center;
 }
+.google{
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

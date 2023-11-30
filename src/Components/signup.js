@@ -1,16 +1,36 @@
 import React from 'react'
 import {Link,useNavigate} from "react-router-dom";
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone,GoogleOutlined } from '@ant-design/icons';
 import { Button, Input , Col,Row, Flex, message,Card } from 'antd';
 import './style.css'
 import { useState } from 'react';
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
 export const Signup = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [password2, setPassword2] = useState();
+    const provider = new GoogleAuthProvider();
+
+    const googleLogin = async () => {
+            signInWithPopup(auth, provider)
+    .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        message.success(`Welcome ${user.displayName}`)
+        navigate('/home')
+    }).catch((error) => {
+        message.error(error.message)
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+    });
+    }
+
     const HandleEmailChange = (e) => {
         setEmail(e.target.value);
     }
@@ -28,7 +48,6 @@ export const Signup = () => {
                 signUp()
             }
         }
-        
     }
     const ValidateEmail =  (e) => {
         
@@ -53,7 +72,7 @@ export const Signup = () => {
         try{
             await createUserWithEmailAndPassword(auth,email, password)
             message.success('Successful Signup')
-            navigate('/login')
+            navigate('/home')
         }catch (error){
             message.error('Unsuccessful Signup')
         }
@@ -90,6 +109,9 @@ export const Signup = () => {
                 </div>
             </Row>
             <hr/>
+            <Row className='row'>
+                <Button className='button' icon={<GoogleOutlined />} onClick={googleLogin}>  Login with Google</Button>
+            </Row>
         </Card>
     </div>
   )
