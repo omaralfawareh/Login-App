@@ -1,12 +1,13 @@
 import React from 'react'
-import {Link} from "react-router-dom";
+import {Link,useNavigate} from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Button, Input , Col,Row, Flex } from 'antd';
+import { Button, Input , Col,Row, Flex, message,Card } from 'antd';
 import './style.css'
 import { useState } from 'react';
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 export const Signup = () => {
+    const navigate = useNavigate()
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [password2, setPassword2] = useState();
@@ -21,7 +22,7 @@ export const Signup = () => {
     }
     const ValidateInput = () => {
         if(email === null || email === undefined || password === undefined || password2 === undefined){
-            alert("Invalid Input");
+            message.warning("Invalid Input");
         }else{
             if(ValidateEmail(email) && ValidatePassword(password)){
                 signUp()
@@ -32,39 +33,38 @@ export const Signup = () => {
     const ValidateEmail =  (e) => {
         
         var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-        if (email.match(validRegex)) {
-            alert("Valid email address!");
-            return true;
-        } else {
-            alert("Invalid email address!");
+        if (!email.match(validRegex)) {
+            message.warning("Invalid Email Address");
             return false;
-        }
+        } 
+        return true
     }
     const ValidatePassword =  (e) => {
         //Minimum eight characters, at least one letter, one number and one special character
         var validRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
         if(password.match(validRegex) && password === password2){
-            alert("Valid Password");
             return true;
         }else{
-            alert("Invalid Password");
+            message.warning("Invalid Password");
             return false;
         }
     }
     const signUp = async () => {
         try{
             await createUserWithEmailAndPassword(auth,email, password)
+            message.success('Successful Signup')
+            navigate('/login')
         }catch (error){
-            console.log(error)
+            message.error('Unsuccessful Signup')
         }
     }
     // const { signup } = useAuth()
   return (
     <div className='container'>
-        <div>
+        <Card bordered={false} style={{ width: 350}}>
             <div>
                 <Row className='row'>
-                <h1>Sign up</h1>
+                <h1>Signup</h1>
                 </Row>
             </div>
             <Row className='row'>
@@ -90,7 +90,7 @@ export const Signup = () => {
                 </div>
             </Row>
             <hr/>
-        </div>
+        </Card>
     </div>
   )
 }

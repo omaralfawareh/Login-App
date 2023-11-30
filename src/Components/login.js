@@ -1,28 +1,21 @@
 import React from 'react'
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Button, Input , Col,Row, Flex } from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone,Alert } from '@ant-design/icons';
+import { Button, Input , Col,Row, Flex,message, Card } from 'antd';
 import {email} from "../App.js";
 import { useState } from 'react';
 import { signInWithEmailAndPassword, signOut ,onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
 import './style.css'
 import { auth } from "../firebase";
 import {   } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 
 
 export const Login = () => {
+    const navigate = useNavigate()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
-   
-    const handleLogout = () => {               
-        signOut(auth).then(() => {
-            // navigate("/");
-            alert("Signed out successfully")
-        }).catch((error) => {
-            alert("Error signing out")
-        });
-    }
 
+   
     const HandleChange = (e) => {
         setEmail(e.target.value);
     }
@@ -30,32 +23,32 @@ export const Login = () => {
         setPassword(e.target.value);
     }
     const ValidateEmail = (e) => {
-        if(email === null || email === undefined){
-            alert("Invalid Input");
+        if(email === null || email === undefined || password === null){
+            message.warning("Invalid Input");
             return false;
         }
         var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         if (email.match(validRegex)) {
-            // alert("Valid email address!");
             logIn();
             return true;
         } else {
-            alert("Invalid email address!");
+            message.warning("Invalid email or password");
             return false;
         }
     }
     const logIn = async () => {
         try{
             const user = await signInWithEmailAndPassword(auth, email, password)
-            alert(auth.currentUser.email)
+            message.success(`Welcome ${auth.currentUser.email}`)
+            navigate('/home')
         }catch (error){
-            alert(error.message)
+            message.error(`Unsuccessful Login`)
         }
     }
   return (
     <div className='container'>
         <div>
-            <form>
+            <Card bordered={false} style={{ width: 350}}>
                 <div>
                     <Row className='row'>
                     <h1>Login</h1>
@@ -70,16 +63,13 @@ export const Login = () => {
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={HandlePassword}
                 />
                 </Row>
-                <Row className='row flex'>
-                    <div>
-                        <a href='test.com'> fogot password? </a>
-                    </div>
-                </Row>
                 <Row className='row'>
                     <Button className='button'  onClick={ValidateEmail}> Login</Button>
                 </Row>
-                <Row className='row'>
-                    <Button className='button' onClick={handleLogout}> SignOut</Button>
+                <Row className='row flex'>
+                    <div>
+                        <a href='/error'> fogot password? </a>
+                    </div>
                 </Row>
                 <Row className='row flex'>
                         <div>Dont have an account?</div>
@@ -88,7 +78,7 @@ export const Login = () => {
                         </div>
                 </Row>
                 <hr/> 
-            </form>
+            </Card>
         </div>
     </div>
   )

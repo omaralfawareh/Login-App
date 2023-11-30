@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Login from './Components/Login.js'
 import Signup from './Components/Signup.js'
+import Home from './Components/Home.js'
+import ErrorPage from './Components/ErrorPage.js'
 import './firebase.js'
 import {
   createBrowserRouter,
@@ -24,6 +26,15 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <Signup/>,
   },
+  {
+    path: "/home",
+    element: <Home/>,
+  },
+  {
+    path: "/*",
+    element: <ErrorPage/>,
+  },
+  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
