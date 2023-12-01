@@ -1,19 +1,16 @@
-import React from 'react'
+import {React, useState} from 'react'
 import { EyeInvisibleOutlined, EyeTwoTone,GoogleOutlined } from '@ant-design/icons';
-import { Button, Input , Col,Row, Flex,message, Card } from 'antd';
-import {email} from "../App.js";
-import { useState } from 'react';
-import { signInWithEmailAndPassword, getAuth, signInWithPopup, GoogleAuthProvider ,signOut ,onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
-import './style.css'
+import { Button, Input , Row, message, Card } from 'antd';
+import { signInWithEmailAndPassword,  signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from "../firebase";
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import './style.css'
 
 export const Login = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const provider = new GoogleAuthProvider();
-
    
     const HandleChange = (e) => {
         setEmail(e.target.value);
@@ -38,22 +35,16 @@ export const Login = () => {
     const googleLogin = async () => {
                 signInWithPopup(auth, provider)
         .then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
             const user = result.user;
             message.success(`Welcome ${user.displayName}`)
             navigate('/home')
         }).catch((error) => {
             message.error(error.message)
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            const email = error.customData.email;
-            const credential = GoogleAuthProvider.credentialFromError(error);
         });
     }
     const logIn = async () => {
         try{
-            const user = await signInWithEmailAndPassword(auth, email, password)
+            await signInWithEmailAndPassword(auth, email, password)
             message.success(`Welcome ${auth.currentUser.email}`)
             navigate('/home')
         }catch (error){
@@ -79,7 +70,7 @@ export const Login = () => {
                 />
                 </Row>
                 <Row className='row'>
-                    <Button className='button'  onClick={ValidateEmail}> Login</Button>
+                    <Button className='button' type='primary' onClick={ValidateEmail}> Login</Button>
                 </Row>
                 <Row className='row flex'>
                     <div>

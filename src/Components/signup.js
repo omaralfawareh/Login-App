@@ -1,11 +1,10 @@
-import React from 'react'
-import {Link,useNavigate} from "react-router-dom";
+import {React, useState} from 'react'
+import {useNavigate} from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone,GoogleOutlined } from '@ant-design/icons';
-import { Button, Input , Col,Row, Flex, message,Card } from 'antd';
-import './style.css'
-import { useState } from 'react';
+import { Button, Input , Row, message,Card } from 'antd';
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import './style.css'
 
 export const Signup = () => {
     const navigate = useNavigate()
@@ -17,17 +16,11 @@ export const Signup = () => {
     const googleLogin = async () => {
             signInWithPopup(auth, provider)
     .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
         const user = result.user;
         message.success(`Welcome ${user.displayName}`)
         navigate('/home')
     }).catch((error) => {
         message.error(error.message)
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
     });
     }
 
@@ -77,7 +70,6 @@ export const Signup = () => {
             message.error('Unsuccessful Signup')
         }
     }
-    // const { signup } = useAuth()
   return (
     <div className='container'>
         <Card bordered={false} style={{ width: 350}}>
@@ -100,7 +92,7 @@ export const Signup = () => {
                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} onChange={HandlePass2Change}/>
             </Row>
             <Row className='row'>
-                <Button className='button' onClick={ValidateInput}> Signup </Button>
+                <Button className='button' type='primary' onClick={ValidateInput}> Signup </Button>
             </Row>
             <Row className='row flex'>
                 <div>Already have an account?</div>
